@@ -1,5 +1,6 @@
 (use-modules (srfi srfi-1))
 
+;; Unordered sets
 (define (u/element-of-set? x set)
   (cond ((null? set) #f)
         ((equal? x (car set)) #t)
@@ -21,6 +22,7 @@
 (define (u/union-set set1 set2)
   (fold-right adjoin-set set2 set1))
 
+;; Unordered multisets
 (define (um/element-of-set? x set)
   (u/element-of-set? x set))
 
@@ -33,6 +35,7 @@
 (define (um/union-set set1 set2)
   (append set1 set2))
 
+;; Ordered sets
 (define (o/element-of-set? x set)
   (cond ((null? set) #f)
         ((= x (car set)) #t)
@@ -70,6 +73,7 @@
                  (else
                   (cons x2 (o/union-set set1 (cdr set2)))))))))
 
+;; Binary trees
 (define (entry tree) (car tree))
 (define (left-branch tree) (cadr tree))
 (define (right-branch tree) (caddr tree))
@@ -109,6 +113,7 @@
               (cons (entry tree)
                     (tree->list (right-branch tree))))))
 
+;; Balancing
 (define (partial-tree elts n)
   (if (= n 0)
       (cons '() elts)
@@ -151,3 +156,21 @@
         (lunion (o/union-set lset1 lset2))
         (union (list->tree lunion)))
     union))
+
+(define (tr/lookup given-key set)
+  (if (null? set)
+      #f
+      (let ((cur-entry (entry set))
+            (cur-key (key cur-entry)))
+        (cond ((= cur-key given-key) cur-entry)
+              ((< given-key cur-key)
+               (lookup given-key (left-branch set)))
+              ((> given-key cur-key)
+               (lookup given-key (right-branch set)))))))
+
+;; Store key-value pairs
+(define (make-record key data)
+  (list key data))
+
+(define (key record) (car record))
+(define (data record) (cadr record))
