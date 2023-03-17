@@ -22,3 +22,15 @@
 
 (define (u/union-set set1 set2)
   (fold-right adjoin-set set2 set1))
+
+(define (um/element-of-set? x set)
+  (u/element-of-set? x set))
+
+(define (um/adjoin-set x set)
+  (cons x set))
+
+(define (um/intersection-set set1 set2)
+  (u/intersection-set set1 set2))
+
+(define (um/union-set set1 set2)
+  (append set1 set2))
